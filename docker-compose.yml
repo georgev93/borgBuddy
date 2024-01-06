@@ -4,15 +4,13 @@ services:
   borg-backup1:
     env_file:
       - .env
-    #environment:
-    #- borg_passphrase=${DOCKER_BORG_PASSPHRASE}
-    #- destination_path=${DOCKER_BORG_DEST_PATH}
-    #- borgUser_passwd=${DOCKER_BORG_USER_PASSWD}
+    environment:
+      - DOCKER_BORG_DEST_PATH=${DOCKER_BORG_DEST_PATH}
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        keyDir: ./borg-creds/1
+        keyDir: private/borg-creds/1
     container_name: borg-backup1
     ports:
       - "2222:22"
@@ -26,21 +24,17 @@ services:
   borg-backup2:
     env_file:
       - .env
-    #environment:
-    #- borg_passphrase=${DOCKER_BORG_PASSPHRASE}
-    #- destination_path=${DOCKER_BORG_DEST_PATH}
-    #- borgUser_passwd=${DOCKER_BORG_USER_PASSWD}
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        keyDir: ./borg-creds/2
+        keyDir: private/borg-creds/2
     container_name: borg-backup2
     ports:
       - "2223:22"
     volumes:
       - ./sourceDir/2:/sourceDir:ro
-      - ./destDir/2:/destDir:rw
+      - ./destDir/2:${DOCKER_BORG_DEST_PATH}:rw
     networks:
       my_network:
         ipv4_address: 172.100.0.12

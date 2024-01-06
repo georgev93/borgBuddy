@@ -1,1 +1,4 @@
 private/
+**/.env
+destDir/1/*
+destDir/2/*
