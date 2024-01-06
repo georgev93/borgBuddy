@@ -4,7 +4,7 @@ FROM alpine:$BASE_IMAGE_VERSION
 ARG keyDir
 
 # Import custom sshd settings
-COPY ./borg-sshdConfig/sshd_config /etc/ssh/sshd_config.d/sshd_config
+COPY ./borg-sshdConfig/sshd_config /etc/ssh/sshd_config.d/99-customSshd.conf
 
 # Install software
 RUN apk --no-cache add borgbackup py3-packaging openssh sudo
