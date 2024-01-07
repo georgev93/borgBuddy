@@ -27,6 +27,24 @@ EOF
 # Add a -D to hold the script here
 sudo /usr/sbin/sshd
 
+# Start the ssh-agent and load it with the passphrase to use the ssh key
+# This involves a stupid workaround of meeting three criteria to pass the passphrase automatically:
+# 1: Have a script that echos the passphrase
+# 2: Spoof a display (!?)
+# 3: Not be in a tty
+cat <<EOF > /home/borgUser/.ssh/passphraseEcho.sh; chmod 700 /home/borgUser/.ssh/passphraseEcho.sh
+#!/bin/sh
+echo "$DOCKER_BORG_SSH_PASSPHRASE"
+EOF
+eval $(ssh-agent -s) && \
+	SSH_ASKPASS="/home/borgUser/.ssh/passphraseEcho.sh" \
+        DISPLAY="dummy:0" \
+	ssh-add /home/borgUser/.ssh/privKeyOut </dev/null
+
+# Now you'll scripts to be able to access the ssh-agent's socket so stick a link to it here
+ln -s $SSH_AUTH_SOCK /home/borgUser/.ssh/ssh-agent-sock-link
+chmod 700 /home/borgUser/.ssh/ssh-agent-sock-link
+
 # Start the cron daemon
 sudo crond
 

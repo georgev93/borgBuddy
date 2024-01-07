@@ -17,10 +17,8 @@ mkdir $testPairPrivateDir
 # Generate keypairs
 mkdir $testPairPrivateDir/sshKeys1
 mkdir $testPairPrivateDir/sshKeys2
-#ssh-keygen -f ./1 -N $sshPassphrase1
-#ssh-keygen -f ./2 -N $sshPassphrase2
-ssh-keygen -f ./1 -N ""
-ssh-keygen -f ./2 -N ""
+ssh-keygen -f ./1 -N $sshPassphrase1
+ssh-keygen -f ./2 -N $sshPassphrase2
 mv 1 $testPairPrivateDir/sshKeys1/privKeyOut
 mv 2 $testPairPrivateDir/sshKeys2/privKeyOut
 mv 1.pub $testPairPrivateDir/sshKeys2/authorized_keys
