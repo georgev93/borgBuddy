@@ -1,4 +1,5 @@
-private/
-**/.env
-destDir/1/*
-destDir/2/*
+**/private/
+testPair/sourceDir1/*
+testPair/sourceDir2/*
+testPair/destDir1/*
+testPair/destDir2/*

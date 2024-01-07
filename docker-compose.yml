@@ -1,47 +1,18 @@
 version: '3'
 
 services:
-  borg-backup1:
-    container_name: borg-backup1
+  borg-backup:
+    container_name: borg-backup
     env_file:
       - private/.env
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        KEY_DIR: private/borg-creds/1
-        BACKUP_TARGET_ADDRESS: 172.100.0.12
-    ports:
-      - "2222:22"
-    volumes:
-      - ./sourceDir/1:/sourceDir:ro
-      - ./destDir/1:/destDir:rw
-    networks:    
-      my_network:
-        ipv4_address: 172.100.0.11
-
-  borg-backup2:
-    container_name: borg-backup2
-    env_file:
-      - private/.env
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        KEY_DIR: private/borg-creds/2
-        BACKUP_TARGET_ADDRESS: 172.100.0.11
-    ports:
-      - "2223:22"
-    volumes:
-      - ./sourceDir/2:/sourceDir:ro
-      - ./destDir/2:/destDir:rw
-    networks:
-      my_network:
-        ipv4_address: 172.100.0.12
-
-networks:
-  my_network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.100.0.0/24
+        KEY_DIR: ./private
+        BACKUP_TARGET_ADDRESS: remote.target.adsfasdfasdfasdfa.com
+    #ports:
+    #  - "2222:22"
+    #volumes:
+    #  - ./sourceDir/1:/sourceDir:ro
+    #  - ./destDir/1:/destDir:rw

@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  borg-backup1:
+    extends:
+      file: ../docker-compose.yml
+      service: borg-backup
+    container_name: borg-backup1
+    env_file:
+      - private/.env1
+    build:
+      args:
+        KEY_DIR: testPair/private/sshKeys1
+        BACKUP_TARGET_ADDRESS: 172.100.0.12
+    volumes:
+      - ./sourceDir1:/sourceDir:ro
+      - ./destDir1:/destDir:rw
+    networks:
+      borg-test-network:
+        ipv4_address: 172.100.0.11
+
+  borg-backup2:
+    extends:
+      file: ../docker-compose.yml
+      service: borg-backup
+    container_name: borg-backup2
+    env_file:
+      - private/.env2
+    build:
+      args:
+        KEY_DIR: testPair/private/sshKeys2
+        BACKUP_TARGET_ADDRESS: 172.100.0.11
+    volumes:
+      - ./sourceDir2:/sourceDir:ro
+      - ./destDir2:/destDir:rw
+    networks:
+      borg-test-network:
+        ipv4_address: 172.100.0.12
+
+networks:
+  borg-test-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.100.0.0/24
+
