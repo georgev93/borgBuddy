@@ -37,4 +37,9 @@ sudo syslogd -l 6 -S
 borg init -e repokey
 
 # END HERE - Sit forever
-/usr/bin/tail -f /dev/null
+# "sleep infinity" as a blocking command won't end with SIGTERM, so killing this container
+# would take a while to timeout. Instead, trap on SIGTERM, make the blocking process a 
+# spawned subprocess and wait on the result of that subprocess.
+trap 'exit 0' SIGTERM SIGINT
+(sleep infinity) &
+wait $!
