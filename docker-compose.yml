@@ -2,41 +2,39 @@ version: '3'
 
 services:
   borg-backup1:
+    container_name: borg-backup1
     env_file:
-      - .env
-    environment:
-      - DOCKER_BORG_DEST_PATH=${DOCKER_BORG_DEST_PATH}
+      - private/.env
     build:
       context: .
       dockerfile: Dockerfile
       args:
         KEY_DIR: private/borg-creds/1
         BACKUP_TARGET_ADDRESS: 172.100.0.12
-    container_name: borg-backup1
     ports:
       - "2222:22"
     volumes:
       - ./sourceDir/1:/sourceDir:ro
-      - ./destDir/1:${DOCKER_BORG_DEST_PATH}:rw
+      - ./destDir/1:/destDir:rw
     networks:    
       my_network:
         ipv4_address: 172.100.0.11
 
   borg-backup2:
+    container_name: borg-backup2
     env_file:
-      - .env
+      - private/.env
     build:
       context: .
       dockerfile: Dockerfile
       args:
         KEY_DIR: private/borg-creds/2
         BACKUP_TARGET_ADDRESS: 172.100.0.11
-    container_name: borg-backup2
     ports:
       - "2223:22"
     volumes:
       - ./sourceDir/2:/sourceDir:ro
-      - ./destDir/2:${DOCKER_BORG_DEST_PATH}:rw
+      - ./destDir/2:/destDir:rw
     networks:
       my_network:
         ipv4_address: 172.100.0.12

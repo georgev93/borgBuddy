@@ -10,7 +10,7 @@ echo "borgUser:$DOCKER_BORG_USER_PASSWD" | sudo chpasswd
 
 #   Next put the sensitive environment variables in a file that can be sourced in the cron
 echo "export BORG_PASSPHRASE=$DOCKER_BORG_PASSPHRASE" > /home/borgUser/borgVars.sh
-echo "export BORG_REPO=\"ssh://backup_target$DOCKER_BORG_DEST_PATH\"" >> /home/borgUser/borgVars.sh
+echo "export BORG_REPO=\"ssh://backup_target/destDir\"" >> /home/borgUser/borgVars.sh
 chmod 700 /home/borgUser/borgVars.sh
 source /home/borgUser/borgVars.sh
 
