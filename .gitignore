@@ -3,3 +3,4 @@ testPair/sourceDir1/*
 testPair/sourceDir2/*
 testPair/destDir1/*
 testPair/destDir2/*
+testPair/logs
