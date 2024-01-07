@@ -20,7 +20,7 @@ borg create                         \
     --compression lz4               \
     --exclude-caches                \
                                     \
-    ::'autoBackup-{now}'            \
+    ::"$BACKUP_NAME"'-{now}'            \
     /sourceDir
 
 backup_exit=$?
@@ -34,7 +34,7 @@ info "Pruning repository"
 
 borg prune                          \
     --list                          \
-    --glob-archives 'autoBackup-*'  \
+    --glob-archives "$BACKUP_NAME"'-*'  \
     --show-rc                       \
     --keep-daily    7               \
     --keep-weekly   4               \

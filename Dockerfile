@@ -4,10 +4,13 @@ FROM alpine:$BASE_IMAGE_VERSION
 ARG KEY_DIR
 ARG BACKUP_TARGET_ADDRESS
 ARG BACKUP_TARGET_PORT=22
+ARG BACKUP_FREQUENCY="00 12 * * *"
+ARG BACKUP_NAME="my-backup"
 
 # Make these env variables so the entry script can grab them
 ENV BACKUP_TARGET_ADDRESS=$BACKUP_TARGET_ADDRESS
 ENV BACKUP_TARGET_PORT=$BACKUP_TARGET_PORT
+ENV BACKUP_NAME=$BACKUP_NAME
 
 # Import custom sshd settings
 COPY ./borg-sshdConfig/sshd_config /etc/ssh/sshd_config.d/99-customSshd.conf
@@ -50,7 +53,8 @@ RUN chown borgUser /scripts/*
 RUN chmod +x /scripts/*
 
 # Create the cron for daily backups
-RUN echo "00 12 * * * /bin/sh /scripts/backup.sh 2>&1 | logger -t backup_script -p notice" > /etc/crontabs/borgUser
+RUN echo "export BACKUP_NAME=$BACKUP_NAME # For the backup_script" > /etc/crontabs/borgUser
+RUN echo "$BACKUP_FREQUENCY BACKUP_NAME=$BACKUP_NAME /bin/sh /scripts/backup.sh 2>&1 | logger -t backup_script -p notice" >> /etc/crontabs/borgUser
 
 # Set the entrypoint script
 ENTRYPOINT [ "/bin/sh", "/scripts/entry.sh" ]

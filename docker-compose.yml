@@ -11,6 +11,7 @@ services:
       args:
         KEY_DIR: ./private
         BACKUP_TARGET_ADDRESS: remote.target.adsfasdfasdfasdfa.com
+        BACKUP_NAME: auto-backup
     #ports:
     #  - "2222:22"
     #volumes:
