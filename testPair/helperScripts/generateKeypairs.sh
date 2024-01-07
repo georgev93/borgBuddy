@@ -26,14 +26,14 @@ mv 2.pub $testPairPrivateDir/sshKeys1/authorized_keys
 
 # Generate .env files
 cat <<EOF > $testPairPrivateDir/.env1
-DOCKER_BORG_PASSPHRASE=$borgPassphrase1
-DOCKER_BORG_USER_PASSWD=$userAccountPassword1
-DOCKER_BORG_SSH_PASSPHRASE=$sshPassphrase1
+DOCKER_BORG_PASSPHRASE='$borgPassphrase1'
+DOCKER_BORG_USER_PASSWD='$userAccountPassword1'
+DOCKER_BORG_SSH_PASSPHRASE='$sshPassphrase1'
 EOF
 
 cat <<EOF > $testPairPrivateDir/.env2
-DOCKER_BORG_PASSPHRASE=$borgPassphrase2
-DOCKER_BORG_USER_PASSWD=$userAccountPassword2
-DOCKER_BORG_SSH_PASSPHRASE=$sshPassphrase2
+DOCKER_BORG_PASSPHRASE='$borgPassphrase2'
+DOCKER_BORG_USER_PASSWD='$userAccountPassword2'
+DOCKER_BORG_SSH_PASSPHRASE='$sshPassphrase2'
 EOF
 
