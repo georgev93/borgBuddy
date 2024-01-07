@@ -14,6 +14,15 @@ echo "export BORG_REPO=\"ssh://backup_target$DOCKER_BORG_DEST_PATH\"" >> /home/b
 chmod 700 /home/borgUser/borgVars.sh
 source /home/borgUser/borgVars.sh
 
+# Set up borgUser's .ssh/config to use the private key
+cat <<EOF > /home/borgUser/.ssh/config; chmod 600 /home/borgUser/.ssh/config
+Host backup_target
+    HostName ${BACKUP_TARGET_ADDRESS}
+    Port ${BACKUP_TARGET_PORT}
+    IdentityFile /home/borgUser/.ssh/privKeyOut
+    StrictHostKeyChecking no
+EOF
+
 # Start the sshd daemon in the background as root (sudo)
 # Add a -D to hold the script here
 sudo /usr/sbin/sshd

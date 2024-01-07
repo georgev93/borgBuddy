@@ -10,7 +10,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        keyDir: private/borg-creds/1
+        KEY_DIR: private/borg-creds/1
+        BACKUP_TARGET_ADDRESS: 172.100.0.12
     container_name: borg-backup1
     ports:
       - "2222:22"
@@ -28,7 +29,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        keyDir: private/borg-creds/2
+        KEY_DIR: private/borg-creds/2
+        BACKUP_TARGET_ADDRESS: 172.100.0.11
     container_name: borg-backup2
     ports:
       - "2223:22"

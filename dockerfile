@@ -1,7 +1,13 @@
 ARG BASE_IMAGE_VERSION=latest
 FROM alpine:$BASE_IMAGE_VERSION
 
-ARG keyDir
+ARG KEY_DIR
+ARG BACKUP_TARGET_ADDRESS
+ARG BACKUP_TARGET_PORT=22
+
+# Make these env variables so the entry script can grab them
+ENV BACKUP_TARGET_ADDRESS=$BACKUP_TARGET_ADDRESS
+ENV BACKUP_TARGET_PORT=$BACKUP_TARGET_PORT
 
 # Import custom sshd settings
 COPY ./borg-sshdConfig/sshd_config /etc/ssh/sshd_config.d/99-customSshd.conf
@@ -32,7 +38,7 @@ RUN echo 'borgUser ALL=(ALL:ALL) NOPASSWD:ALL' >> /etc/sudoers
 RUN mkdir /home/borgUser/.ssh
 RUN chown borgUser /home/borgUser/.ssh
 RUN chmod 0700 /home/borgUser/.ssh
-COPY $keyDir/* /home/borgUser/.ssh/
+COPY $KEY_DIR/* /home/borgUser/.ssh/
 RUN chown borgUser /home/borgUser/.ssh/*
 RUN chmod 0600 /home/borgUser/.ssh/*
 
