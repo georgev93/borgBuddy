@@ -7,7 +7,6 @@
 
 BORG_PASSPHRASE=`cat /root/borgPassphrase.txt`
 BORG_USER_PASSWORD=`cat /root/borgUserPass.txt`
-BORG_SSH_PASSPHRASE=`cat /root/borgSshPassphrase.txt`
 
 echo "borgUser:$BORG_USER_PASS" | chpasswd
 
@@ -38,7 +37,7 @@ EOF
 # 3: Not be in a tty
 cat <<EOF > /root/.ssh/passphraseEcho.sh; chmod 700 /root/.ssh/passphraseEcho.sh
 #!/bin/sh
-echo "$BORG_SSH_PASSPHRASE"
+cat /root/borgSshPassphrase.txt
 EOF
 eval $(ssh-agent -s) && \
 	SSH_ASKPASS="/root/.ssh/passphraseEcho.sh" \

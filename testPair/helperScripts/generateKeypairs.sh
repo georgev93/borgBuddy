@@ -1,11 +1,11 @@
 #!/bin/sh
 
-sshPassphrase1="thisIsThePassphraseOfTheSSHKeyOut1"
-sshPassphrase2="thisIsThePassphraseOfTheSSHKeyOut2"
-borgPassphrase1="thisPassphraseLetsYouDecryptTheBorgBackupDirectory1"
-borgPassphrase2="thisPassphraseLetsYouDecryptTheBorgBackupDirectory2"
-userAccountPassword1="thisIsThePasswordForTheNonPrivilegedUserInTheContainer1"
-userAccountPassword2="thisIsThePasswordForTheNonPrivilegedUserInTheContainer2"
+sshPassphrase1='thisIsThePassphraseOfTheSSHKeyOut1'
+sshPassphrase2='thisIsThePassphraseOfTheSSHKeyOut2'
+borgPassphrase1='thisPassphraseLetsYouDecryptTheBorgBackupDirectory1'
+borgPassphrase2='thisPassphraseLetsYouDecryptTheBorgBackupDirectory2'
+userAccountPassword1='thisIsThePasswordForTheNonPrivilegedUserInTheContainer1'
+userAccountPassword2='thisIsThePasswordForTheNonPrivilegedUserInTheContainer2'
 
 scriptDir="$(dirname "$0")"
 testPairPrivateDir="$scriptDir/../private"
