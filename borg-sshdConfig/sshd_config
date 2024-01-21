@@ -2,8 +2,8 @@ Protocol 2
 Port 22
 PermitRootLogin no
 PubkeyAuthentication yes
-PasswordAuthentication no
-PermitEmptyPasswords no
+PasswordAuthentication yes
+PermitEmptyPasswords yes
 AllowTcpForwarding no
 GatewayPorts no
 X11Forwarding no

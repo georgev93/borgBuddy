@@ -6,8 +6,8 @@ ARG BACKUP_TARGET_ADDRESS
 ARG BACKUP_TARGET_PORT=22
 ARG BACKUP_FREQUENCY="00 12 * * *"
 ARG BACKUP_NAME="my-backup"
-ARG BORG_UID=1000
-ARG BORG_GID=1000
+ARG BORG_UID=8765
+ARG BORG_GID=8765
 
 # Make these env variables so the entry script can grab them
 ENV BACKUP_TARGET_ADDRESS=$BACKUP_TARGET_ADDRESS
@@ -18,7 +18,7 @@ ENV BACKUP_NAME=$BACKUP_NAME
 COPY ./borg-sshdConfig/sshd_config /etc/ssh/sshd_config.d/99-customSshd.conf
 
 # Install software
-RUN apk --no-cache add borgbackup py3-packaging openssh sudo
+RUN apk --no-cache add borgbackup py3-packaging openssh # sudo
 
 # Set Timezone
 RUN apk add --no-cache tzdata \
@@ -40,29 +40,23 @@ RUN ssh-keygen -A -N ''
 RUN adduser -u $BORG_UID -g $BORG_GID -D borgUser
 
 # Allow password-less sudo
-RUN echo 'borgUser ALL=(ALL:ALL) NOPASSWD:ALL' >> /etc/sudoers
+#RUN echo 'borgUser ALL=(ALL:ALL) NOPASSWD: borg' >> /etc/sudoers
 
 # Move imported creds to the .ssh folder
-RUN mkdir /home/borgUser/.ssh
-RUN chown borgUser /home/borgUser/.ssh
-RUN chmod 0700 /home/borgUser/.ssh
-COPY $KEY_DIR/* /home/borgUser/.ssh/
-RUN chown borgUser /home/borgUser/.ssh/*
-RUN chmod 0600 /home/borgUser/.ssh/*
+RUN install -d -m 0700 -o root     /root/.ssh
+RUN install -d -m 0700 -o borgUser /home/borgUser/.ssh
+COPY --chmod=0600 --chown=root     $KEY_DIR/privKeyOut /root/.ssh/privKeyOut
+COPY --chmod=0600 --chown=borgUser $KEY_DIR/authorized_keys /home/borgUser/.ssh/authorized_keys
 
 # Import scripts
 RUN mkdir /scripts
-RUN chown borgUser /scripts
-COPY ./borg-scripts/* /scripts/
-RUN chown borgUser /scripts/*
-RUN chmod +x /scripts/*
+COPY --chmod=0755 --chown=root ./borg-scripts/* /scripts/
 
 # Create the cron for daily backups
-RUN echo "export BACKUP_NAME=$BACKUP_NAME # For the backup_script" > /etc/crontabs/borgUser
-RUN echo "$BACKUP_FREQUENCY BACKUP_NAME=$BACKUP_NAME /bin/sh /scripts/backup.sh 2>&1 | logger -t backup_script -p notice" >> /etc/crontabs/borgUser
+RUN echo "$BACKUP_FREQUENCY /scripts/backup.sh $BACKUP_NAME 2>&1 | logger -t backup_script -p notice" >> /etc/crontabs/root
 
 # Set the entrypoint script
 ENTRYPOINT [ "/bin/sh", "/scripts/entry.sh" ]
 
 # Run as user account
-USER borgUser
+#USER borgUser

@@ -1,9 +1,12 @@
 #!/bin/sh
 
-source /home/borgUser/borgVars.sh
+source /root/borgVars.sh
+
+# Use an argument passed to this script to name the backups
+BACKUP_NAME=$1
 
 # Use the symlink we created earlier to the ssh-agent socket
-export SSH_AUTH_SOCK=/home/borgUser/.ssh/ssh-agent-sock-link
+export SSH_AUTH_SOCK=/root/.ssh/ssh-agent-sock-link
 
 # some helpers and error handling:
 info() { printf "\n%s %s\n\n" "$( date )" "$*" >&2; }
