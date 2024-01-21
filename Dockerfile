@@ -2,6 +2,9 @@ ARG BASE_IMAGE_VERSION=latest
 FROM alpine:$BASE_IMAGE_VERSION
 
 ARG KEY_DIR
+ARG BORG_PASSPHRASE_FILE
+ARG BORG_USER_PASSWORD_FILE
+ARG BORG_SSH_PASSPHRASE_FILE
 ARG BACKUP_TARGET_ADDRESS
 ARG BACKUP_TARGET_PORT=22
 ARG BACKUP_FREQUENCY="00 12 * * *"
@@ -47,6 +50,9 @@ RUN install -d -m 0700 -o root     /root/.ssh
 RUN install -d -m 0700 -o borgUser /home/borgUser/.ssh
 COPY --chmod=0600 --chown=root     $KEY_DIR/privKeyOut /root/.ssh/privKeyOut
 COPY --chmod=0600 --chown=borgUser $KEY_DIR/authorized_keys /home/borgUser/.ssh/authorized_keys
+COPY --chmod=0600 --chown=root $BORG_PASSPHRASE_FILE /root/borgPassphrase.txt
+COPY --chmod=0600 --chown=root $BORG_USER_PASSWORD_FILE /root/borgUserPass.txt
+COPY --chmod=0600 --chown=root $BORG_SSH_PASSPHRASE_FILE /root/borgSshPassphrase.txt
 
 # Import scripts
 RUN mkdir /scripts

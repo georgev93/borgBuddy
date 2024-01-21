@@ -6,11 +6,12 @@ services:
       file: ../docker-compose.yml
       service: borg-backup
     container_name: borg-backup1
-    env_file:
-      - private/.env1
     build:
       args:
-        KEY_DIR: testPair/private/sshKeys1
+        KEY_DIR: testPair/private/secrets1/sshKeys
+        BORG_PASSPHRASE_FILE: testPair/private/secrets1/borgPassphrase.txt
+        BORG_USER_PASSWORD_FILE: testPair/private/secrets1/borgUserPass.txt
+        BORG_SSH_PASSPHRASE_FILE: testPair/private/secrets1/borgSshPassphrase.txt
         BACKUP_TARGET_ADDRESS: 172.100.0.12
         BACKUP_NAME: auto-backup-1
         BACKUP_FREQUENCY: "* * * * *"
@@ -30,11 +31,12 @@ services:
       file: ../docker-compose.yml
       service: borg-backup
     container_name: borg-backup2
-    env_file:
-      - private/.env2
     build:
       args:
-        KEY_DIR: testPair/private/sshKeys2
+        KEY_DIR: testPair/private/secrets2/sshKeys
+        BORG_PASSPHRASE_FILE: testPair/private/secrets2/borgPassphrase.txt
+        BORG_USER_PASSWORD_FILE: testPair/private/secrets2/borgUserPass.txt
+        BORG_SSH_PASSPHRASE_FILE: testPair/private/secrets2/borgSshPassphrase.txt
         BACKUP_TARGET_ADDRESS: 172.100.0.11
         BACKUP_NAME: auto-backup-2
         BORG_UID: 7654

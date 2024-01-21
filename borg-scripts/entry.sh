@@ -5,10 +5,14 @@
 # process). We're also avoiding making these args because that gets recorded in the
 # plaintext docker history
 
-echo "borgUser:$DOCKER_BORG_USER_PASSWD" | chpasswd
+BORG_PASSPHRASE=`cat /root/borgPassphrase.txt`
+BORG_USER_PASSWORD=`cat /root/borgUserPass.txt`
+BORG_SSH_PASSPHRASE=`cat /root/borgSshPassphrase.txt`
+
+echo "borgUser:$BORG_USER_PASS" | chpasswd
 
 #   Next put the sensitive environment variables in a file that can be sourced in the cron
-echo "export BORG_PASSPHRASE='$DOCKER_BORG_PASSPHRASE'" > /root/borgVars.sh
+echo "export BORG_PASSPHRASE='$BORG_PASSPHRASE'" > /root/borgVars.sh
 echo "export BORG_REPO=\"ssh://backup_target/destDir\"" >> /root/borgVars.sh
 chmod 700 /root/borgVars.sh
 source /root/borgVars.sh
@@ -34,7 +38,7 @@ EOF
 # 3: Not be in a tty
 cat <<EOF > /root/.ssh/passphraseEcho.sh; chmod 700 /root/.ssh/passphraseEcho.sh
 #!/bin/sh
-echo "$DOCKER_BORG_SSH_PASSPHRASE"
+echo "$BORG_SSH_PASSPHRASE"
 EOF
 eval $(ssh-agent -s) && \
 	SSH_ASKPASS="/root/.ssh/passphraseEcho.sh" \
