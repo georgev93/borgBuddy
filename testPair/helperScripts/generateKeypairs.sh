@@ -15,25 +15,54 @@ rm -rf $testPairPrivateDir
 mkdir $testPairPrivateDir
 
 # Generate keypairs
-mkdir $testPairPrivateDir/sshKeys1
-mkdir $testPairPrivateDir/sshKeys2
-ssh-keygen -f ./1 -N $sshPassphrase1
-ssh-keygen -f ./2 -N $sshPassphrase2
-mv 1 $testPairPrivateDir/sshKeys1/privKeyOut
-mv 2 $testPairPrivateDir/sshKeys2/privKeyOut
-mv 1.pub $testPairPrivateDir/sshKeys2/authorized_keys
-mv 2.pub $testPairPrivateDir/sshKeys1/authorized_keys
+mkdir $testPairPrivateDir/secrets1
+mkdir $testPairPrivateDir/secrets2
+mkdir $testPairPrivateDir/secrets1/sshKeys
+mkdir $testPairPrivateDir/secrets2/sshKeys
+ssh-keygen -f ./1 -a 100 -N $sshPassphrase1
+ssh-keygen -f ./2 -a 100 -N $sshPassphrase2
+mv 1 $testPairPrivateDir/secrets1/sshKeys/privKeyOut
+mv 2 $testPairPrivateDir/secrets2/sshKeys/privKeyOut
+mv 1.pub $testPairPrivateDir/secrets2/sshKeys/authorized_keys
+mv 2.pub $testPairPrivateDir/secrets1/sshKeys/authorized_keys
 
-# Generate .env files
-cat <<EOF > $testPairPrivateDir/.env1
-DOCKER_BORG_PASSPHRASE='$borgPassphrase1'
-DOCKER_BORG_USER_PASSWD='$userAccountPassword1'
-DOCKER_BORG_SSH_PASSPHRASE='$sshPassphrase1'
-EOF
+# Store private files for Container 1
+echo $sshPassphrase1 > $testPairPrivateDir/secrets1/borgSshPassphrase.txt
+echo $borgPassphrase1 > $testPairPrivateDir/secrets1/borgPassphrase.txt
+echo $userAccountPassword1 > $testPairPrivateDir/secrets1/borgUserPass.txt
 
-cat <<EOF > $testPairPrivateDir/.env2
-DOCKER_BORG_PASSPHRASE='$borgPassphrase2'
-DOCKER_BORG_USER_PASSWD='$userAccountPassword2'
-DOCKER_BORG_SSH_PASSPHRASE='$sshPassphrase2'
+# Store private files for Container 2
+echo $sshPassphrase2 > $testPairPrivateDir/secrets2/borgSshPassphrase.txt
+echo $borgPassphrase2 > $testPairPrivateDir/secrets2/borgPassphrase.txt
+echo $userAccountPassword2 > $testPairPrivateDir/secrets2/borgUserPass.txt
+
+# Echo summary
+
+cat <<EOF
+
+
+
+Container 1 Secrets:
+
+SSH Passphrase: $sshPassphrase1
+Borg passphrase: $borgPassphrase1
+User Account Password: $userAccountPassword1
+SSH Private Key:
 EOF
+cat $testPairPrivateDir/secrets1/sshKeys/privKeyOut
+
+cat <<EOF
+
+
+
+Container 2 Secrets:
+
+SSH Passphrase: $sshPassphrase2
+Borg passphrase: $borgPassphrase2
+User Account Password: $userAccountPassword2
+SSH Private Key:
+EOF
+cat $testPairPrivateDir/secrets1/sshKeys/privKeyOut
+
+find $testPairPrivateDir -type f -exec chmod 0600 {} \;
 
