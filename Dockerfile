@@ -6,6 +6,8 @@ ARG BACKUP_TARGET_ADDRESS
 ARG BACKUP_TARGET_PORT=22
 ARG BACKUP_FREQUENCY="00 12 * * *"
 ARG BACKUP_NAME="my-backup"
+ARG BORG_UID=1000
+ARG BORG_GID=1000
 
 # Make these env variables so the entry script can grab them
 ENV BACKUP_TARGET_ADDRESS=$BACKUP_TARGET_ADDRESS
@@ -32,7 +34,7 @@ WORKDIR /
 RUN ssh-keygen -A -N ''
 
 # Create user account
-RUN adduser -D borgUser
+RUN adduser -u $BORG_UID -g $BORG_GID -D borgUser
 
 # Allow password-less sudo
 RUN echo 'borgUser ALL=(ALL:ALL) NOPASSWD:ALL' >> /etc/sudoers
