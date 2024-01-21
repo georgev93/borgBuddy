@@ -30,6 +30,9 @@ RUN apk add --no-cache tzdata \
 USER root
 WORKDIR /
 
+# Disable root login
+RUN sed '/^root/ s#/bin/ash#/sbin/nologin#' /etc/passwd
+
 # Generate hostkeys for the sshd daemon
 RUN ssh-keygen -A -N ''
 
